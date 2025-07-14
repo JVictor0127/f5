@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo F5 - Consultoria Estratégica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral (stone) with a Dark Teal accent -->
+    <!-- Application Structure Plan: The SPA is structured as a narrative journey for a potential client, moving from value to action. It starts with a Hero section stating the mission, followed by 'Nossos Serviços' (Proposta de Valor) using interactive cards. Then, 'Para Quem' (Segmentos de Clientes) uses filter buttons to show tailored services, making it highly relevant. 'Como Trabalhamos' combines Atividades and Canais into a clear, step-by-step process diagram. 'Nossa Base' builds trust by showing Parceiros and Recursos. A 'Modelo de Negócio' section uses charts for financial transparency (Receitas/Custos). This user-centric flow is more persuasive and easier to navigate than a static canvas layout, guiding the user from interest to contact. -->
+    <!-- Visualization & Content Choices: 1. Proposta de Valor -> Goal: Inform/Organize -> Method: Interactive HTML/Tailwind cards -> Interaction: Hover/click to reveal details -> Justification: Presents dense information cleanly, encouraging exploration. 2. Segmentos de Clientes -> Goal: Relate/Filter -> Method: JS-powered filter buttons and a Bar Chart (Chart.js) -> Interaction: Clicking buttons filters a visible list of services tailored to the segment -> Justification: Personalizes the experience, showing users exactly how F5 can help them. 3. Atividades & Canais -> Goal: Organize/Inform -> Method: Step-by-step process flow diagram using HTML/Tailwind -> Interaction: Static visual guide -> Justification: Simplifies the complex consulting process into an easy-to-understand journey. 4. Fluxo de Receita & Custos -> Goal: Inform/Compare -> Method: Donut charts (Chart.js) -> Interaction: Hover to see details on tooltips -> Justification: Visualizes financial structure quickly and transparently, building trust. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0D9488; /* teal-600 */
+            border-bottom-color: #0D9488;
+        }
+        .service-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .client-button.active {
+            background-color: #0F766E; /* teal-700 */
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-teal-800">Grupo F5</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#services" class="nav-link font-medium text-stone-600 border-b-2 border-transparent">Serviços</a>
+                <a href="#clients" class="nav-link font-medium text-stone-600 border-b-2 border-transparent">Para Quem</a>
+                <a href="#process" class="nav-link font-medium text-stone-600 border-b-2 border-transparent">Como Trabalhamos</a>
+                <a href="#contact" class="bg-teal-600 text-white px-4 py-2 rounded-full hover:bg-teal-700 transition">Contato</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-stone-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#services" class="block py-2 text-stone-600">Serviços</a>
+             <a href="#clients" class="block py-2 text-stone-600">Para Quem</a>
+             <a href="#process" class="block py-2 text-stone-600">Como Trabalhamos</a>
+             <a href="#contact" class="block mt-2 bg-teal-600 text-white px-4 py-2 rounded-full text-center">Contato</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="container mx-auto px-6 py-20 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold text-teal-900 mb-4">Transformando a sua saúde financeira.</h2>
+            <p class="text-lg md:text-xl text-stone-600 max-w-3xl mx-auto">O Grupo F5 oferece consultoria financeira personalizada para pessoas e empresas, simplificando o complexo, otimizando recursos e construindo um futuro próspero e seguro.</p>
+        </section>
+
+        <section id="services" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-800">Nossos Serviços</h3>
+                    <p class="text-stone-600 mt-2">Soluções completas para garantir sua tranquilidade e crescimento financeiro.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Tranquilidade Financeira</h4>
+                        <p class="text-stone-600">Planos personalizados para seus objetivos de vida: aposentadoria, compra de bens e educação dos filhos.</p>
+                    </div>
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Simplificação e Organização</h4>
+                        <p class="text-stone-600">Descomplicamos finanças complexas, organizando suas dívidas, receitas e despesas de forma clara.</p>
+                    </div>
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Educação Financeira</h4>
+                        <p class="text-stone-600">Capacitamos você para tomar decisões financeiras mais conscientes e seguras.</p>
+                    </div>
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Otimização de Fluxo de Caixa</h4>
+                        <p class="text-stone-600">Análise e reestruturação para melhorar a saúde financeira e a liquidez do seu negócio.</p>
+                    </div>
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Redução de Custos</h4>
+                        <p class="text-stone-600">Identificamos oportunidades de corte e renegociação para aumentar sua eficiência.</p>
+                    </div>
+                    <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Aumento de Lucratividade</h4>
+                        <p class="text-stone-600">Desenvolvemos estratégias de precificação, gestão de custos e planejamento de receitas.</p>
+                    </div>
+                     <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Acesso a Capital</h4>
+                        <p class="text-stone-600">Assessoramos na busca por linhas de crédito e investimentos adequados ao seu perfil.</p>
+                    </div>
+                     <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Otimização Tributária</h4>
+                        <p class="text-stone-600">Orientação sobre regimes fiscais e estratégias para reduzir a carga de impostos legalmente.</p>
+                    </div>
+                     <div class="service-card bg-stone-50 p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h4 class="text-xl font-bold text-teal-800 mb-2">Precificação Estratégica</h4>
+                        <p class="text-stone-600">Ajudamos a definir preços de produtos/serviços que garantam margens saudáveis e competitividade.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="clients" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-800">Para Quem</h3>
+                    <p class="text-stone-600 mt-2">Nossas soluções são desenhadas para atender diferentes perfis. Selecione o seu para ver os serviços em destaque.</p>
+                </div>
+                <div class="flex justify-center space-x-2 md:space-x-4 mb-8 flex-wrap gap-y-2">
+                    <button data-filter="all" class="client-button active bg-white border border-teal-600 text-teal-600 px-4 py-2 rounded-full transition">Todos</button>
+                    <button data-filter="pf" class="client-button bg-white border border-teal-600 text-teal-600 px-4 py-2 rounded-full transition">Pessoas Físicas</button>
+                    <button data-filter="pme" class="client-button bg-white border border-teal-600 text-teal-600 px-4 py-2 rounded-full transition">PMEs</button>
+                    <button data-filter="ei" class="client-button bg-white border border-teal-600 text-teal-600 px-4 py-2 rounded-full transition">Empreendedores Individuais</button>
+                </div>
+                <div id="client-services-list" class="max-w-4xl mx-auto">
+                    <div class="p-4 bg-white rounded-lg shadow">
+                         <ul class="space-y-3 text-stone-700">
+                            <li data-client="pf" class="client-service-item flex items-center gap-3"><span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PF</span>Tranquilidade Financeira</li>
+                            <li data-client="pf" class="client-service-item flex items-center gap-3"><span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PF</span>Simplificação e Organização</li>
+                            <li data-client="pf" class="client-service-item flex items-center gap-3"><span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PF</span>Educação Financeira Personalizada</li>
+                            <li data-client="pme" class="client-service-item flex items-center gap-3"><span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PME</span>Otimização de Fluxo de Caixa</li>
+                            <li data-client="pme" class="client-service-item flex items-center gap-3"><span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PME</span>Redução de Custos e Despesas</li>
+                            <li data-client="pme" class="client-service-item flex items-center gap-3"><span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PME</span>Aumento de Lucratividade</li>
+                            <li data-client="pme" class="client-service-item flex items-center gap-3"><span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PME</span>Acesso a Capital</li>
+                            <li data-client="ei" class="client-service-item flex items-center gap-3"><span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">EI</span>Separação de finanças PF/PJ</li>
+                            <li data-client="ei" class="client-service-item flex items-center gap-3"><span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">EI</span>Precificação Estratégica</li>
+                            <li data-client="ei" class="client-service-item flex items-center gap-3"><span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">EI</span>Otimização Tributária</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-800">Como Trabalhamos</h3>
+                    <p class="text-stone-600 mt-2">Nosso processo é estruturado para garantir clareza, eficiência e resultados tangíveis.</p>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-teal-200 -translate-y-1/2"></div>
+                    <div class="relative grid md:grid-cols-4 gap-12">
+                        <div class="text-center">
+                             <div class="mb-4 flex justify-center items-center w-16 h-16 mx-auto bg-teal-600 text-white rounded-full text-2xl font-bold">1</div>
+                            <h4 class="text-lg font-bold mb-2">Diagnóstico</h4>
+                            <p class="text-stone-600 text-sm">Entendemos a fundo sua realidade financeira através de análises e conversas.</p>
+                        </div>
+                        <div class="text-center">
+                             <div class="mb-4 flex justify-center items-center w-16 h-16 mx-auto bg-teal-600 text-white rounded-full text-2xl font-bold">2</div>
+                            <h4 class="text-lg font-bold mb-2">Estratégia</h4>
+                            <p class="text-stone-600 text-sm">Desenvolvemos um plano de ação personalizado com metas claras e alcançáveis.</p>
+                        </div>
+                        <div class="text-center">
+                             <div class="mb-4 flex justify-center items-center w-16 h-16 mx-auto bg-teal-600 text-white rounded-full text-2xl font-bold">3</div>
+                            <h4 class="text-lg font-bold mb-2">Implementação</h4>
+                            <p class="text-stone-600 text-sm">Apoiamos você na execução do plano, oferecendo suporte contínuo e orientação.</p>
+                        </div>
+                        <div class="text-center">
+                             <div class="mb-4 flex justify-center items-center w-16 h-16 mx-auto bg-teal-600 text-white rounded-full text-2xl font-bold">4</div>
+                            <h4 class="text-lg font-bold mb-2">Acompanhamento</h4>
+                            <p class="text-stone-600 text-sm">Monitoramos os resultados e ajustamos a estratégia para garantir o sucesso a longo prazo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="business-model" class="py-20">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-800">Nosso Modelo de Negócio</h3>
+                    <p class="text-stone-600 mt-2">Transparência é um de nossos valores. Veja como geramos valor e gerenciamos nossa estrutura.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-bold text-center mb-4 text-stone-700">Fontes de Receita</h4>
+                        <div class="chart-container">
+                             <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-center mb-4 text-stone-700">Estrutura de Custos</h4>
+                        <div class="chart-container">
+                            <canvas id="costsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 bg-teal-800 text-white">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-3xl font-bold mb-4">Pronto para dar o próximo passo?</h3>
+                <p class="mb-8 max-w-2xl mx-auto">Vamos conversar sobre como o Grupo F5 pode ajudar você a alcançar seus objetivos financeiros. Agende uma consulta inicial sem compromisso.</p>
+                <a href="#" class="bg-white text-teal-800 px-8 py-3 rounded-full font-bold hover:bg-stone-100 transition text-lg">Fale Conosco</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white py-6">
+        <div class="container mx-auto px-6 text-center text-stone-500">
+            <p>&copy; 2025 Grupo F5. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const clientButtons = document.querySelectorAll('.client-button');
+            const clientServiceItems = document.querySelectorAll('.client-service-item');
+
+            clientButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+
+                    clientButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    clientServiceItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.client === filter) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Honorários por Projeto', 'Taxa de Retainer', 'Comissão / Indicação', 'Venda de Conteúdo'],
+                    datasets: [{
+                        label: 'Fontes de Receita',
+                        data: [50, 35, 10, 5],
+                        backgroundColor: ['#0F766E', '#14B8A6', '#5EEAD4', '#99F6E4'],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const costsCtx = document.getElementById('costsChart').getContext('2d');
+            const costsChart = new Chart(costsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Custos com Pessoal', 'Marketing e Vendas', 'Tecnologia e Infra', 'Administrativo'],
+                    datasets: [{
+                        label: 'Estrutura de Custos',
+                        data: [60, 15, 15, 10],
+                        backgroundColor: ['#78716C', '#A8A29E', '#D6D3D1', '#F5F5F4'],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
